@@ -1,6 +1,3 @@
-import { useDispatch } from "react-redux";
-import Countdown from "react-countdown";
-import { setShowBanner, setShowMenu } from "../features/banner/bannerSlice";
 import { Link } from "react-router-dom";
 import hexRgb from "hex-rgb";
 
@@ -24,7 +21,6 @@ export default function SingleBanner({
     link,
     linkTitle,
     color,
-    showBanner,
     datetime,
 }: {
     title: string;
@@ -35,7 +31,6 @@ export default function SingleBanner({
     showBanner: boolean;
     datetime: string;
 }) {
-    const dispatch = useDispatch();
     const rgbArr = hexRgb(color, { format: "array" });
     const r = rgbArr[0];
     const g = rgbArr[1];
@@ -53,7 +48,7 @@ export default function SingleBanner({
     const minutes = newTime.getMinutes();
     const seconds = newTime.getSeconds();
 
-    function calculateTimeRemaining(targetTime) {
+    function calculateTimeRemaining(targetTime: string) {
         // Convert the targetTime to a Date object
         const targetDate = new Date(targetTime);
         const now = new Date();
