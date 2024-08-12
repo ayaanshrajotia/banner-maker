@@ -28,7 +28,7 @@ export default function Banners() {
     return (
         <div className="min-h-screen min-w-screen home-bg relative overflow-hidden">
             <h1 className="text-3xl font-bold pt-6 pl-6">Banner Maker</h1>
-            <div className="relative">
+            <div className="flex flex-col gap-6 mt-[100px] mx-6">
                 {banners?.map((banner: BannerType) => (
                     <SingleBanner
                         key={banner?.id}

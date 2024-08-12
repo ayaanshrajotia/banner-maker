@@ -30,10 +30,10 @@ export default function Menubar() {
         (state: RootState) => state.banner
     );
     const [bannerDetails, setBannerDetails] = useState({
-        title: "asdfasdf",
-        description: "asdfadsf",
-        linkTitle: "asdfasdf",
-        link: "http://www.google.com",
+        title: "",
+        description: "",
+        linkTitle: "",
+        link: "",
     });
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const dispatch = useDispatch<AppDispatch>();
