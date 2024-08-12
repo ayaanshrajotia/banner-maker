@@ -1,4 +1,65 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const createBannerApi = createAsyncThunk(
+    "banner/createBanner",
+    async (
+        {
+            title,
+            description,
+            linkTitle,
+            link,
+            expirationTime,
+            color,
+            showBanner,
+        }: {
+            title: string;
+            description: string;
+            linkTitle: string;
+            link: string;
+            expirationTime: string;
+            color: string;
+            showBanner: boolean;
+        },
+        { rejectWithValue }
+    ) => {
+        try {
+            const response = await axios.post(
+                `http://localhost:8000/api/banner/create-banner`,
+                {
+                    title,
+                    description,
+                    linkTitle,
+                    link,
+                    expirationTime,
+                    color,
+                    showBanner,
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const getBannersApi = createAsyncThunk(
+    "banner/getBanners",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(
+                `http://localhost:8000/api/banner/get-banners`
+            );
+
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue(error);
+        }
+    }
+);
 
 // Define a type for the slice state
 interface BannerState {
@@ -22,6 +83,7 @@ interface BannerState {
     };
     showBanner: boolean;
     showMenu: boolean;
+    banners: [];
 }
 
 // Define the initial state using that type
@@ -46,6 +108,7 @@ const initialState: BannerState = {
     showBanner: false,
     showMenu: true,
     datetime: "",
+    banners: [],
 };
 
 export const bannerSlice = createSlice({
@@ -78,6 +141,15 @@ export const bannerSlice = createSlice({
         setShowMenu: (state, action) => {
             state.showMenu = action.payload;
         },
+    },
+    extraReducers: (builder) => {
+        // builder.addCase(createBannerApi.fulfilled, (state, action) => {
+        //     state.banners = action.payload;
+        // });
+
+        builder.addCase(getBannersApi.fulfilled, (state, action) => {
+            state.banners = action.payload;
+        });
     },
 });
 

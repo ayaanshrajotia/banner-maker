@@ -58,27 +58,14 @@ export default function Banner() {
         if (!completed) {
             return (
                 <div
-                    className={`banner-shadow border-[1px] absolute left-1/2 -translate-x-1/2 translate-y-[300px] bg-yellow-100 p-6 rounded-2xl flex gap-4 max-w-[800px] w-full ${textColor} justify-between mx-6 items-start`}
+                    className={`banner-shadow border-[1px] absolute left-1/2 -translate-x-1/2 translate-y-[300px] bg-yellow-100 p-6 rounded-2xl flex flex-col gap-6 max-w-[800px] w-full ${textColor} justify-between items-center `}
                     style={{ backgroundColor: color.hex }}
                 >
                     <div className="flex flex-col gap-4 break-all">
                         <div className="flex gap-2">
-                            <span className="text-3xl font-bold break-words">
+                            <span className="text-4xl font-bold break-words">
                                 {title}
                             </span>
-                        </div>
-                        <div className="flex gap-2">
-                            {isValidLink(link) && linkTitle ? (
-                                <Link
-                                    to={link}
-                                    target="_blank"
-                                    className="font-bold underline underline-offset-2 text-xl"
-                                >
-                                    {linkTitle}
-                                </Link>
-                            ) : (
-                                <span>{link}</span>
-                            )}
                         </div>
                         <div className="flex gap-2">
                             <span className="break-all">{description}</span>
@@ -93,6 +80,19 @@ export default function Banner() {
                         <TimeContainer name="Mins" time={minutes} />
                         <span className="text-3xl font-bold">:</span>
                         <TimeContainer name="Secs" time={seconds} />
+                    </div>
+                    <div className="flex gap-2">
+                        {isValidLink(link) && linkTitle ? (
+                            <Link
+                                to={link}
+                                target="_blank"
+                                className="font-bold text-xl rounded-full px-4 py-2 bg-white text-black"
+                            >
+                                {linkTitle}
+                            </Link>
+                        ) : (
+                            <span>{link}</span>
+                        )}
                     </div>
                 </div>
             );

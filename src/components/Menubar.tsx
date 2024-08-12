@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    createBannerApi,
     setBannerColor,
     setDateTime,
     setDetails,
@@ -11,7 +12,7 @@ import { FaceSmileIcon } from "@heroicons/react/24/outline";
 import EmojiPicker from "emoji-picker-react";
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/css";
-import { RootState } from "../app/store";
+import { AppDispatch, RootState } from "../app/store";
 import { motion } from "framer-motion";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import "react-datetime-picker/dist/DateTimePicker.css";
@@ -29,13 +30,13 @@ export default function Menubar() {
         (state: RootState) => state.banner
     );
     const [bannerDetails, setBannerDetails] = useState({
-        title: "Title",
-        description: "Description",
-        linkTitle: "Link Title",
-        link: "Link",
+        title: "asdfasdf",
+        description: "asdfadsf",
+        linkTitle: "asdfasdf",
+        link: "http://www.google.com",
     });
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [isEmojiPicker, setIsEmojiPicker] = useState(false);
     const [isColorPicker, setIsColorPicker] = useState(false);
     const [color, setColor] = useColor("#6cdaed");
@@ -49,11 +50,43 @@ export default function Menubar() {
         dispatch(setDateTime(date?.toString()));
     }, [date]);
 
-    const handlePreview = () => {
+    function isValidLink(link: string): boolean {
+        // Regular expression to check if the link starts with http:// or https:// and ends with a domain extension
+        const regex = /^https?:\/\/(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+        return regex.test(link);
+    }
+
+    const handlePreview = async () => {
+        if (!bannerDetails.title || !bannerDetails.description) {
+            toast.error("Title and Description are required");
+            return;
+        }
+        if (!bannerDetails.linkTitle || !bannerDetails.link) {
+            toast.error("Link Title and Link are required");
+            return;
+        }
+        if (!isValidLink(bannerDetails.link)) {
+            toast.error("Invalid Link");
+            return;
+        }
+
         if (datetime <= new Date().toString()) {
             toast.error("Invalid Date");
             return;
         }
+
+        await dispatch(
+            createBannerApi({
+                title: bannerDetails.title,
+                description: bannerDetails.description,
+                linkTitle: bannerDetails.linkTitle,
+                link: bannerDetails.link,
+                expirationTime: datetime,
+                color: color.hex,
+                showBanner: true,
+            })
+        );
+
         dispatch(setShowBanner(true));
         dispatch(setShowMenu(false));
     };
